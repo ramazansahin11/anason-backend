@@ -1,18 +1,24 @@
 package ramazan.sahin.ecommerce.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "payments")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
@@ -20,12 +26,8 @@ public class Payment {
     private PaymentMethod paymentMethod;
 
     @Enumerated(EnumType.STRING)
-    private PaymentStatus paymentStatus = PaymentStatus.PENDING;
+    private PaymentStatus paymentStatus;
 
-    @Column(unique = true)
-    private String paymentReference;
-
-    @Column(nullable = false)
     private BigDecimal amount;
 
     private LocalDateTime createdAt;
@@ -35,15 +37,6 @@ public class Payment {
     }
 
     public enum PaymentStatus {
-        PENDING, COMPLETED, FAILED, REFUNDED
-    }
-
-    // Getters and setters
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+        PENDING, COMPLETED, FAILED
     }
 }

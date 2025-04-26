@@ -1,9 +1,10 @@
 package ramazan.sahin.ecommerce.entity;
 
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.*;
 import lombok.*;
-
 @Entity
 @Table(name = "order_items")
 @Data
@@ -28,5 +29,5 @@ public class OrderItem {
     private Integer quantity;
 
     @Column(nullable = false)
-    private Double unitPrice;
+    private BigDecimal unitPrice;
 }

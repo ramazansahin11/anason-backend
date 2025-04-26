@@ -12,7 +12,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id", nullable = false)
     private User seller;
 
@@ -33,6 +33,26 @@ public class Product {
     private LocalDateTime createdAt;
 
     // Getters and setters
+    public void setName(String name) {
+        this.name = name;
+    }
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    // Getter for id
+    public Long getId() {
+        return id;
+    }
+
+    // Getter for name
+    public String getName() {
+        return name;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -72,4 +92,12 @@ public class Product {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+    public User getSeller() {
+        return seller;
+    }
+    
+    public void setSeller(User seller) {
+        this.seller = seller;
+    }
+    
 }

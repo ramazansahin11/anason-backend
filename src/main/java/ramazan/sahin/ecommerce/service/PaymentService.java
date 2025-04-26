@@ -1,5 +1,14 @@
 package ramazan.sahin.ecommerce.service;
 
-public class PaymentService {
+import java.util.List;
+
+import ramazan.sahin.ecommerce.dto.PaymentDTO;
+import ramazan.sahin.ecommerce.dto.PaymentRequest;
+
+public interface PaymentService {
+    PaymentDTO processPayment(PaymentRequest paymentRequest);
+    List<PaymentDTO> getAllPaymentByUser();
+    boolean isPaymentSucceeded(String paymentIntentId);
     
+
 }
