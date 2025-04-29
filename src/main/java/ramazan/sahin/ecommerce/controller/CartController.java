@@ -43,4 +43,28 @@ public ResponseEntity<List<CartItemDTO>> getMyCart() {
         cartService.removeFromCart(cartItemId);
         return ResponseEntity.ok("Product removed from cart successfully.");
     }
+
+    //sepetteki urunleri guncelleme
+    @PutMapping("/update/{cartItemId}")
+public ResponseEntity<String> updateCartItem(
+        @PathVariable Long cartItemId,
+        @RequestParam int quantity
+) {
+    cartService.updateCartItem(cartItemId, quantity);
+    return ResponseEntity.ok("Cart item updated successfully.");
+}
+
+@DeleteMapping("/clear")
+public ResponseEntity<String> clearCart() {
+    cartService.clearCart();
+    return ResponseEntity.ok("Cart cleared successfully.");
+}
+
+@PostMapping("/checkout")
+public ResponseEntity<String> checkout() {
+    cartService.checkout();
+    return ResponseEntity.ok("Sipariş başarıyla oluşturuldu!");
+}
+
+
 }

@@ -103,4 +103,30 @@ public class PaymentServiceImpl implements PaymentService {
    
        
     }
+
+    @Override
+public PaymentDTO createPaymentAfterCheckout(Long orderId) {
+    Order order = orderRepository.findById(orderId)
+        .orElseThrow(() -> new EntityNotFoundException("Order not found"));
+
+    Payment payment = Payment.builder()
+        .order(order)
+        .paymentMethod(Payment.PaymentMethod.STRIPE) // varsayılan olarak STRIPE
+        .paymentStatus(Payment.PaymentStatus.COMPLETED) // demo senaryosu için
+        .amount(order.getTotalPrice())
+        .createdAt(LocalDateTime.now())
+        .build();
+
+    Payment savedPayment = paymentRepository.save(payment);
+
+    return PaymentDTO.builder()
+        .id(savedPayment.getId())
+        .orderId(savedPayment.getOrder().getId())
+        .paymentMethod(savedPayment.getPaymentMethod().name())
+        .paymentStatus(savedPayment.getPaymentStatus().name())
+        .amount(savedPayment.getAmount())
+        .createdAt(savedPayment.getCreatedAt())
+        .build();
+}
+
 }

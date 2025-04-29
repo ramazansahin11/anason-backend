@@ -1,7 +1,9 @@
 package ramazan.sahin.ecommerce.service;
 
 import ramazan.sahin.ecommerce.entity.User;
+import ramazan.sahin.ecommerce.exception.BadRequestException;
 import ramazan.sahin.ecommerce.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -55,4 +57,19 @@ public class UserService {
         user.setStatus(User.Status.ACTIVE);
         return userRepository.save(user);
     }
+
+    public User changeUserRole(Long userId, String role) {
+    User user = userRepository.findById(userId)
+            .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+    try {
+        User.Role newRole = User.Role.valueOf(role.toUpperCase());
+        user.setRole(newRole);
+    } catch (IllegalArgumentException e) {
+        throw new BadRequestException("Invalid role: " + role);
+    }
+
+    return userRepository.save(user);
+}
+
 }

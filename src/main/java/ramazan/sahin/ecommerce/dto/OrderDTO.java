@@ -3,7 +3,8 @@ package ramazan.sahin.ecommerce.dto;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.List;
-
+import lombok.Data;
+@Data
 public class OrderDTO {
 
     private Long id; // Response için gerekli olabilir (CREATE sonrası)

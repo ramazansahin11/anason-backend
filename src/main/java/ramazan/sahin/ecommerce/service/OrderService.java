@@ -3,7 +3,6 @@ package ramazan.sahin.ecommerce.service;
 import ramazan.sahin.ecommerce.dto.OrderDTO;
 import java.util.List;
 
-import org.springframework.data.domain.jaxb.SpringDataJaxb.OrderDto;
 
 public interface OrderService {
 
@@ -30,6 +29,9 @@ public interface OrderService {
 
     public void completeOrderIfPaymentSucceeded(Long orderId, String paymentIntentId);
 
+    List<OrderDTO> getAllOrders(Long userId); // İSMİ de mantıklı olsun diye ufak sadeleştirelim
+
+    List<OrderDTO> getOrdersByStatus(String status);
 
     
 }

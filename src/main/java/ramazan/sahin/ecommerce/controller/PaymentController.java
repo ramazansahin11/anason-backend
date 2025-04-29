@@ -2,7 +2,6 @@ package ramazan.sahin.ecommerce.controller;
 
 import ramazan.sahin.ecommerce.dto.PaymentDTO;
 import ramazan.sahin.ecommerce.dto.PaymentRequest;
-import ramazan.sahin.ecommerce.entity.Payment;
 import ramazan.sahin.ecommerce.service.PaymentService;
 import ramazan.sahin.ecommerce.service.StripeService;
 import jakarta.validation.Valid;
@@ -49,5 +48,12 @@ public ResponseEntity<String> createCheckoutSession(@RequestParam Long amount) {
     String checkoutUrl = stripeService.createCheckoutSession(amount, successUrl, cancelUrl);
     return ResponseEntity.ok(checkoutUrl);
 }
+
+@PostMapping("/payments/manual")
+public ResponseEntity<PaymentDTO> createManualPayment(@RequestParam Long orderId) {
+    PaymentDTO dto = paymentService.createPaymentAfterCheckout(orderId);
+    return ResponseEntity.ok(dto);
+}
+
 
 }

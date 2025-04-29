@@ -4,6 +4,7 @@ import ramazan.sahin.ecommerce.entity.User;
 import ramazan.sahin.ecommerce.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,7 +23,8 @@ public class UserController {
         return ResponseEntity.ok(saved);
     }
 
-    // ✅ Tüm kullanıcıları getir (sadece admin kullanabilir - güvenlik sonra eklenir)
+    // ✅ Tüm kullanıcıları getir (sadece admin kullanabilir - güvenlik sonra
+    // eklenir)
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(userService.findAllUsers());
@@ -39,4 +41,11 @@ public class UserController {
     public ResponseEntity<User> unbanUser(@PathVariable Long id) {
         return ResponseEntity.ok(userService.unbanUser(id));
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{id}/role")
+    public ResponseEntity<User> changeUserRole(@PathVariable Long id, @RequestParam String role) {
+        return ResponseEntity.ok(userService.changeUserRole(id, role));
+    }
+
 }

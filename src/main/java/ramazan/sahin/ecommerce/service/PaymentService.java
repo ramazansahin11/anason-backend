@@ -9,6 +9,8 @@ public interface PaymentService {
     PaymentDTO processPayment(PaymentRequest paymentRequest);
     List<PaymentDTO> getAllPaymentByUser();
     boolean isPaymentSucceeded(String paymentIntentId);
+    PaymentDTO createPaymentAfterCheckout(Long orderId);
+
     
 
 }
