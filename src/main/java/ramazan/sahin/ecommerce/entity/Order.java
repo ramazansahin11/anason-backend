@@ -1,11 +1,15 @@
 package ramazan.sahin.ecommerce.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 @Entity
+@Data
 @Table(name = "orders")
 public class Order {
 
@@ -40,28 +44,7 @@ public class Order {
         PENDING, PROCESSING, SHIPPED, DELIVERED, CANCELLED, RETURN_REQUESTED, RETURNED
     }
 
-    // Getters and setters (hepsi için)
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+   
 
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
-
-    public LogisticsProvider getLogisticsProvider() { return logisticsProvider; }
-    public void setLogisticsProvider(LogisticsProvider logisticsProvider) { this.logisticsProvider = logisticsProvider; }
-
-    public Address getShippingAddress() { return shippingAddress; }
-    public void setShippingAddress(Address shippingAddress) { this.shippingAddress = shippingAddress; }
-
-    public Status getStatus() { return status; }
-    public void setStatus(Status status) { this.status = status; }
-
-    public BigDecimal getTotalPrice() { return totalPrice; }
-    public void setTotalPrice(BigDecimal totalPrice) { this.totalPrice = totalPrice; }
-
-    public List<OrderItem> getOrderItems() { return orderItems; }
-    public void setOrderItems(List<OrderItem> orderItems) { this.orderItems = orderItems; }
-
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    
 }

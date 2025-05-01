@@ -3,7 +3,6 @@ package ramazan.sahin.ecommerce.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ramazan.sahin.ecommerce.dto.OrderDTO;
 import ramazan.sahin.ecommerce.service.OrderService;
@@ -31,29 +30,11 @@ public class OrderController {
         return ResponseEntity.ok(myOrders);
     }
 
-    // ✅ 3. Admin - Tüm Siparişleri Listeleme
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/all")
-    public ResponseEntity<List<OrderDTO>> getAllOrders() {
-        List<OrderDTO> orders = orderService.getAllOrdersForUser(null); // userId null → tüm siparişler
-        return ResponseEntity.ok(orders);
-    }
-
     // ✅ 4. Belirli Siparişi Getirme
     @GetMapping("/{id}")
     public ResponseEntity<OrderDTO> getOrderById(@PathVariable Long id) {
         OrderDTO order = orderService.getOrderById(id);
         return ResponseEntity.ok(order);
-    }
-
-    // ✅ 5. Sipariş Durumunu Güncelleme (Sadece Admin)
-    @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/{orderId}/status")
-    public ResponseEntity<OrderDTO> updateOrderStatus(
-            @PathVariable Long orderId,
-            @RequestParam String status) {
-        OrderDTO updatedOrder = orderService.updateOrderStatus(orderId, status);
-        return ResponseEntity.ok(updatedOrder);
     }
 
     // ✅ 6. Siparişi İptal Etme (Kullanıcı kendi siparişini)
@@ -78,13 +59,5 @@ public class OrderController {
         orderService.completeOrderIfPaymentSucceeded(orderId, paymentIntentId);
         return ResponseEntity.ok("Order has been successfully delivered.");
     }
-
-    @PreAuthorize("hasRole('ADMIN')")
-@GetMapping("/filter")
-public ResponseEntity<List<OrderDTO>> filterOrdersByStatus(@RequestParam String status) {
-    List<OrderDTO> orders = orderService.getOrdersByStatus(status);
-    return ResponseEntity.ok(orders);
-}
-
 
 }

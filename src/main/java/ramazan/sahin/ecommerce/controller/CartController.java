@@ -1,6 +1,5 @@
 package ramazan.sahin.ecommerce.controller;
 
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,20 +21,17 @@ public class CartController {
     @PostMapping("/add")
     public ResponseEntity<String> addToCart(
             @RequestParam Long productId,
-            @RequestParam int quantity
-    ) {
+            @RequestParam int quantity) {
         cartService.addToCart(productId, quantity);
         return ResponseEntity.ok("Product added to cart successfully.");
     }
 
     // 2️⃣ Sepeti görüntüle
-   @GetMapping("/my-cart")
-public ResponseEntity<List<CartItemDTO>> getMyCart() {
-    List<CartItemDTO> cartItems = cartService.getMyCart();
-    return ResponseEntity.ok(cartItems);
-}
-
-    
+    @GetMapping("/my-cart")
+    public ResponseEntity<List<CartItemDTO>> getMyCart() {
+        List<CartItemDTO> cartItems = cartService.getMyCart();
+        return ResponseEntity.ok(cartItems);
+    }
 
     // 3️⃣ Sepetten ürün sil
     @DeleteMapping("/remove/{cartItemId}")
@@ -44,27 +40,25 @@ public ResponseEntity<List<CartItemDTO>> getMyCart() {
         return ResponseEntity.ok("Product removed from cart successfully.");
     }
 
-    //sepetteki urunleri guncelleme
+    // sepetteki urunleri guncelleme
     @PutMapping("/update/{cartItemId}")
-public ResponseEntity<String> updateCartItem(
-        @PathVariable Long cartItemId,
-        @RequestParam int quantity
-) {
-    cartService.updateCartItem(cartItemId, quantity);
-    return ResponseEntity.ok("Cart item updated successfully.");
-}
+    public ResponseEntity<String> updateCartItem(
+            @PathVariable Long cartItemId,
+            @RequestParam int quantity) {
+        cartService.updateCartItem(cartItemId, quantity);
+        return ResponseEntity.ok("Cart item updated successfully.");
+    }
 
-@DeleteMapping("/clear")
-public ResponseEntity<String> clearCart() {
-    cartService.clearCart();
-    return ResponseEntity.ok("Cart cleared successfully.");
-}
+    @DeleteMapping("/clear")
+    public ResponseEntity<String> clearCart() {
+        cartService.clearCart();
+        return ResponseEntity.ok("Cart cleared successfully.");
+    }
 
-@PostMapping("/checkout")
-public ResponseEntity<String> checkout() {
-    cartService.checkout();
-    return ResponseEntity.ok("Sipariş başarıyla oluşturuldu!");
-}
-
+    @PostMapping("/checkout")
+    public ResponseEntity<String> checkout() {
+        cartService.checkout();
+        return ResponseEntity.ok("Sipariş başarıyla oluşturuldu!");
+    }
 
 }

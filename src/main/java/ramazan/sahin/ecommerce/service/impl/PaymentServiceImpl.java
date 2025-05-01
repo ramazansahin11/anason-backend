@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import com.stripe.model.PaymentIntent;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -128,5 +129,34 @@ public PaymentDTO createPaymentAfterCheckout(Long orderId) {
         .createdAt(savedPayment.getCreatedAt())
         .build();
 }
+
+@Override
+@Transactional
+public void markPaymentAsSucceeded(Long orderId) {
+    // Sipariş durumunu güncelle
+    Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new BadRequestException("Order not found"));
+            order.setStatus(Order.Status.PROCESSING); // String değil, enum sabiti!
+
+    orderRepository.save(order);
+
+    BigDecimal totalAmount = order.getOrderItems().stream()
+    .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+    // Ödeme kaydı oluştur
+    Payment payment = Payment.builder()
+    .order(order)
+    .amount(totalAmount)
+    .paymentMethod(Payment.PaymentMethod.STRIPE) // İsteğe bağlı
+    .paymentStatus(Payment.PaymentStatus.COMPLETED)
+    .createdAt(LocalDateTime.now())
+    .build();
+
+    paymentRepository.save(payment);
+
+    // (İsteğe bağlı) Kullanıcıya e-posta gönderilebilir
+}
+
 
 }
