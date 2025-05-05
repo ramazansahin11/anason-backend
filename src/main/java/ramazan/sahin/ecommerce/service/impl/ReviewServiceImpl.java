@@ -132,8 +132,8 @@ public class ReviewServiceImpl implements ReviewService {
         }
         return ReviewDTO.builder()
                 .id(review.getId())
-                // User ve Product nesneleri null değilse ID'lerini al, null ise null ata
                 .userId(review.getUser() != null ? review.getUser().getId() : null)
+                .username(review.getUser() != null ? review.getUser().getUsername() : "Anonymous")
                 .productId(review.getProduct() != null ? review.getProduct().getId() : null)
                 .rating(review.getRating())
                 .comment(review.getComment())
@@ -182,5 +182,35 @@ public class ReviewServiceImpl implements ReviewService {
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
     }
+
+    @Transactional(readOnly = true) // Lazy loading için önemli!
+public List<ReviewDTO> getReviewsForProduct(Long productId) {
+    // Repository metodunu çağır (Opsiyon 1 veya 2'ye göre)
+    List<Review> reviews = reviewRepository.findByProductIdWithUser(productId);
+    // Veya Opsiyon 2 için: List<Review> reviews = reviewRepository.findByProductIdOrderByCreatedAtDesc(productId);
+
+    return reviews.stream()
+            .map(this::mapReviewToDto) // DTO'ya çevir
+            .collect(Collectors.toList());
+}
+
+// Helper metod: Review entity'sini ReviewDTO'ya çevirir
+private ReviewDTO mapReviewToDto(Review review) {
+    if (review == null) return null;
+    ReviewDTO dto = new ReviewDTO();
+    dto.setId(review.getId());
+    dto.setRating(review.getRating());
+    dto.setComment(review.getComment());
+    dto.setCreatedAt(review.getCreatedAt()); // Tarih formatı önemli olabilir
+
+    if (review.getUser() != null) {
+        dto.setUserId(review.getUser().getId());
+        dto.setUsername(review.getUser().getUsername()); // Username'i User'dan al
+    } else {
+         dto.setUserId(null); // Veya hata durumu yönetimi
+         dto.setUsername("Unknown User");
+    }
+    return dto;
+}
 
 }

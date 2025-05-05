@@ -15,6 +15,7 @@ public class ReviewDTO {
 
     private Long id;
     private Long userId; // User nesnesi yerine sadece ID'sini tutuyoruz
+    private String username; // Fixed field name from 'Username' to 'username'
     private Long productId; // Product nesnesi yerine sadece ID'sini tutuyoruz
     private Integer rating;
     private String comment;

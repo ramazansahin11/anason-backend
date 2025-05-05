@@ -1,15 +1,12 @@
 package ramazan.sahin.ecommerce.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus; // Eklendi
 import org.springframework.http.ResponseEntity; // Eklendi
+// Doğru RequestBody importu
 import org.springframework.web.bind.annotation.*; // *, PathVariable, PutMapping, DeleteMapping için
 
-// Doğru RequestBody importu
-import org.springframework.web.bind.annotation.RequestBody;
-
 import ramazan.sahin.ecommerce.dto.ReviewDTO;
+import ramazan.sahin.ecommerce.service.ProductService;
 import ramazan.sahin.ecommerce.service.ReviewService;
 
 import java.util.List;
@@ -24,9 +21,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 public class ReviewController {
 
     private final ReviewService reviewService;
+    private final ProductService productService;
 
-    public ReviewController(ReviewService reviewService) {
+    public ReviewController(ReviewService reviewService,ProductService productService) {
         this.reviewService = reviewService;
+        this.productService =productService;
     }
 
     // ✅ 1. Kullanıcı - Ürün Yorumları Görüntüleme (PathVariable ile)
@@ -35,6 +34,13 @@ public class ReviewController {
         List<ReviewDTO> reviews = reviewService.getReviewsByProductId(productId);
         return ResponseEntity.ok(reviews); // 200 OK
     }
+
+       @GetMapping("/{productId}/reviews")
+public ResponseEntity<List<ReviewDTO>> getProductReviews(@PathVariable Long productId) {
+    // ProductService üzerinden (veya ReviewService üzerinden) metodu çağır
+    List<ReviewDTO> reviews = productService.getReviewsForProduct(productId);
+    return ResponseEntity.ok(reviews);
+}
 
     // ✅ 2. Kullanıcı - Ürün Yorumları Oluşturma (Doğru RequestBody kullanımı, ResponseEntity dönüşü)
     // productId'yi DTO'ya eklemek veya path variable yapmak daha iyi olabilir, şimdilik böyle bırakıldı.

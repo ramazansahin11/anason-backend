@@ -4,6 +4,8 @@ package ramazan.sahin.ecommerce.service;
 
 import ramazan.sahin.ecommerce.dto.ProductAttributeValueDTO;
 import ramazan.sahin.ecommerce.dto.ProductDTO;
+import ramazan.sahin.ecommerce.dto.ReviewDTO;
+
 import java.util.List;
 import java.util.Set;
 
@@ -27,4 +29,6 @@ public interface ProductService {
     ProductDTO addAttributesToProduct(Long productId, List<Long> attributeValueIds);
     void removeAttributeFromProduct(Long productId, Long attributeValueId);
     ProductDTO updateProductAttributes(Long productId, List<Long> attributeValueIds);
+
+    List<ReviewDTO> getReviewsForProduct(Long productId);
 }

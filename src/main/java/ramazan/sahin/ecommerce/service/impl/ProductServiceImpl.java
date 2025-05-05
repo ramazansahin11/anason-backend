@@ -2,12 +2,15 @@ package ramazan.sahin.ecommerce.service.impl;
 
 import ramazan.sahin.ecommerce.dto.ProductAttributeValueDTO;
 import ramazan.sahin.ecommerce.dto.ProductDTO;
+import ramazan.sahin.ecommerce.dto.ReviewDTO;
 import ramazan.sahin.ecommerce.entity.Product;
 import ramazan.sahin.ecommerce.entity.ProductAttributeValue; // Import entity
+import ramazan.sahin.ecommerce.entity.Review;
 import ramazan.sahin.ecommerce.entity.User;
 import ramazan.sahin.ecommerce.exception.BadRequestException;
 import ramazan.sahin.ecommerce.repository.ProductAttributeValueRepository; // Import repository
 import ramazan.sahin.ecommerce.repository.ProductRepository;
+import ramazan.sahin.ecommerce.repository.ReviewRepository;
 import ramazan.sahin.ecommerce.repository.UserRepository;
 import ramazan.sahin.ecommerce.service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
@@ -30,14 +33,16 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final ProductAttributeValueRepository attributeValueRepository; // Inject repository
+    private final ReviewRepository reviewRepository;
 
     // Updated constructor
     public ProductServiceImpl(ProductRepository productRepository,
                               UserRepository userRepository,
-                              ProductAttributeValueRepository attributeValueRepository) {
+                              ProductAttributeValueRepository attributeValueRepository,ReviewRepository reviewRepository) {
         this.productRepository = productRepository;
         this.userRepository = userRepository;
         this.attributeValueRepository = attributeValueRepository; // Initialize repository
+        this.reviewRepository =reviewRepository;
     }
 
     // --- Existing Methods (with minor potential adjustments if needed) ---
@@ -399,6 +404,45 @@ public class ProductServiceImpl implements ProductService {
             // Optionally map the full attribute DTO if needed:
             // dto.setAttribute(mapAttributeToDto(entity.getAttribute()));
         }
+        return dto;
+    }
+
+    @Override
+@Transactional(readOnly = true) // Good practice for read operations
+public List<ReviewDTO> getReviewsForProduct(Long productId) {
+    // Optional: Check if product exists first
+    // if (!productRepository.existsById(productId)) {
+    //     throw new EntityNotFoundException("Product not found with id: " + productId);
+    // }
+
+    List<Review> reviews = reviewRepository.findByProductId(productId);
+    // Use the correct mapper for Review objects
+    return reviews.stream()
+                  .map(this::mapReviewToDto) // Use the new mapper method
+                  .collect(Collectors.toList());
+}
+
+    private ReviewDTO mapReviewToDto(Review review) {
+        if (review == null) {
+            return null;
+        }
+        ReviewDTO dto = new ReviewDTO();
+        dto.setId(review.getId());
+        dto.setRating(review.getRating());
+        dto.setComment(review.getComment());
+        // Assuming ReviewDTO has fields for user and product IDs/names
+        if (review.getUser() != null) {
+             dto.setUserId(review.getUser().getId());
+             dto.setUsername(review.getUser().getUsername()); // Or email/full name as needed in DTO
+        }
+         if (review.getProduct() != null) {
+             dto.setProductId(review.getProduct().getId());
+             // Optionally add product name if needed in ReviewDTO
+            // dto.setProductName(review.getProduct().getName());
+         }
+         // Map other relevant fields like review date if they exist in both entities
+         // dto.setReviewDate(review.getCreatedAt()); // Example
+    
         return dto;
     }
 
