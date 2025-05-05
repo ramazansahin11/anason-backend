@@ -38,8 +38,8 @@ public class ReviewController {
 
     // ✅ 2. Kullanıcı - Ürün Yorumları Oluşturma (Doğru RequestBody kullanımı, ResponseEntity dönüşü)
     // productId'yi DTO'ya eklemek veya path variable yapmak daha iyi olabilir, şimdilik böyle bırakıldı.
-    @PostMapping("/create")
-    public ResponseEntity<ReviewDTO> createReview(@RequestBody ReviewDTO reviewDto, @RequestParam Long productId) {
+    @PostMapping("/create/{productId}")
+    public ResponseEntity<ReviewDTO> createReview(@RequestBody ReviewDTO reviewDto, @PathVariable Long productId) {
         ReviewDTO createdReview = reviewService.createReview(reviewDto, productId);
         return new ResponseEntity<>(createdReview, HttpStatus.CREATED); // 201 Created
     }
