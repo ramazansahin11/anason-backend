@@ -24,7 +24,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -72,25 +74,48 @@ public class CartServiceImpl implements CartService {
     }
 
     // Kullanıcının sepetini getir
-   public List<CartItemDTO> getMyCart() {
+  @Override // getMyCart metodunu @Override ile işaretlemek iyi bir pratiktir.
+public List<CartItemDTO> getMyCart() {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     String email = auth.getName();
 
     User user = userRepository.findByEmail(email)
-            .orElseThrow(() -> new EntityNotFoundException("User not found"));
+            .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + email)); // Daha açıklayıcı mesaj
 
-    Cart cart = cartRepository.findByUser(user)
-            .orElseThrow(() -> new EntityNotFoundException("Cart not found"));
+    // Cart'ı user ID ile bulmak daha verimli olabilir
+    Cart cart = cartRepository.findByUserId(user.getId())
+            .orElseThrow(() -> new EntityNotFoundException("Cart not found for user ID: " + user.getId()));
 
+    // CartItem'ları direkt Cart üzerinden alalım (ilişki zaten var)
+    // List<CartItem> cartItems = cartItemRepository.findByCartId(cart.getId()); // Bu sorguya gerek kalmayabilir
+
+    if (cart.getItems() == null) { // Null kontrolü
+        return Collections.emptyList(); // Boş liste döndür
+    }
+
+    // Stream API ile DTO'ya map'leme
     return cart.getItems().stream().map(item -> {
         CartItemDTO dto = new CartItemDTO();
-        dto.setId(item.getId());
+        dto.setId(item.getId()); // CartItem ID'sini set et
         dto.setProductId(item.getProduct().getId());
-        dto.setProductName(item.getProduct().getName());
         dto.setQuantity(item.getQuantity());
+
+        // Product bilgilerini ekle
+        Product product = item.getProduct(); // İlişkili ürünü al
+        if (product != null) { // Null kontrolü
+             dto.setProductName(product.getName());
+             dto.setPrice(product.getPrice());       // Fiyatı ekle
+             dto.setImageUrl(product.getImageUrl()); // Resmi ekle
+        } else {
+            // Ürün bulunamazsa varsayılan değerler atanabilir
+            dto.setProductName("Product not found");
+            dto.setPrice(BigDecimal.ZERO);
+            dto.setImageUrl(null);
+        }
         return dto;
-    }).toList();
+    }).collect(Collectors.toList()); // .toList() daha modern
 }
+
 
 
     // Sepetten ürün çıkar
