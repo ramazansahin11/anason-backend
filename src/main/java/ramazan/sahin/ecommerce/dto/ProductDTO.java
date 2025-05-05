@@ -29,11 +29,16 @@ public class ProductDTO {
     @Min(value = 0, message = "Stock quantity must be non-negative")
     private Integer stockQuantity;
 
+    private Long seller_id; // Optional: Ürünü ekleyen satıcı ID'si
+
+    private String sellerUsername; // Optional: Ürünü ekleyen satıcı adı
+
     private String category;
 
     private String imageUrl; // Optional: Ürün görseli
 
     private Set<ProductAttributeValueDTO> attributes;
+
 
  
 }
