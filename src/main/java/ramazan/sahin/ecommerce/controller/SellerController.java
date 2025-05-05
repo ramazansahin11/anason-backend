@@ -33,6 +33,16 @@ public class SellerController {
         return ResponseEntity.ok(orders);
     }
 
+    // Endpoint to get products for the seller
+    @GetMapping("/products")   
+    public ResponseEntity<List<ProductDTO>> getProductsForSeller() {
+        List<ProductDTO> products = productService.getAllProductsForUser(); // Implement filtering by seller in the
+                                                                           // service layer
+        return ResponseEntity.ok(products);
+    }
+    
+
+
     // Endpoint to get payments for the seller's products
     @GetMapping("/payments")
     public ResponseEntity<List<PaymentDTO>> getPaymentsForSeller() {

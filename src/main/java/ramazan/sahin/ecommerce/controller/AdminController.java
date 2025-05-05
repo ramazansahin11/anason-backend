@@ -3,10 +3,11 @@ package ramazan.sahin.ecommerce.controller;
 import lombok.RequiredArgsConstructor;
 import ramazan.sahin.ecommerce.dto.OrderDTO;
 import ramazan.sahin.ecommerce.dto.PaymentDTO;
+import ramazan.sahin.ecommerce.dto.ProductDTO;
 import ramazan.sahin.ecommerce.entity.User;
 import ramazan.sahin.ecommerce.service.ProductService;
 import ramazan.sahin.ecommerce.service.UserService;
-import ramazan.sahin.ecommerce.service.OrderService; // Sipariş servisi ekleniyor
+import ramazan.sahin.ecommerce.service.OrderService;
 import ramazan.sahin.ecommerce.service.PaymentService;
 
 import java.util.List;
@@ -14,6 +15,10 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 @RestController
 @RequestMapping("/api/admin")
@@ -64,6 +69,12 @@ public class AdminController {
     @DeleteMapping("/product/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("products/{id}")
+    public ResponseEntity<Void> updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
+        productService.updateProduct(id, productDTO);
         return ResponseEntity.noContent().build();
     }
 
