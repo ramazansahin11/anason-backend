@@ -1,7 +1,10 @@
 package ramazan.sahin.ecommerce.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data; // Or add getters/setters manually if not using Lombok
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -11,6 +14,9 @@ import java.util.Set;     // Import Set
 @Entity
 @Data
 @Table(name = "products")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Product {
 
     @Id
