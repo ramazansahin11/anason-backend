@@ -85,7 +85,7 @@ public class ReviewServiceImpl implements ReviewService {
                   .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + currentUsername)); // orElseThrow kullanımı iyileştirildi
 
         // Yorumu yapan kullanıcı veya admin değilse hata fırlat
-        // TODO: currentUser.isAdmin() gibi bir metot veya rol kontrolü ekleyin
+        
         boolean isAdmin = auth.getAuthorities().stream()
                               .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
         if (!existingReview.getUser().equals(currentUser) && !isAdmin ) {
@@ -109,7 +109,6 @@ public class ReviewServiceImpl implements ReviewService {
          User currentUser = userRepository.findByEmail(currentUsername)
                   .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + currentUsername));
 
-         // TODO: currentUser.isAdmin() gibi bir metot veya rol kontrolü ekleyin
           boolean isAdmin = auth.getAuthorities().stream()
                               .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
          if (!reviewToDelete.getUser().equals(currentUser) && !isAdmin) {

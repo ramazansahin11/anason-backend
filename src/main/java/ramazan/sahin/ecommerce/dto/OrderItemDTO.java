@@ -2,8 +2,11 @@ package ramazan.sahin.ecommerce.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+
 import java.math.BigDecimal;
 
+@Data
 public class OrderItemDTO {
 
     @NotNull(message = "Product id must not be null")
@@ -16,28 +19,4 @@ public class OrderItemDTO {
     @NotNull(message = "Unit price must not be null")
     private BigDecimal unitPrice;
 
-    // Getters and Setters
-    public Long getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Long productId) {
-        this.productId = productId;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public BigDecimal getUnitPrice() {
-        return unitPrice;
-    }
-
-    public void setUnitPrice(BigDecimal unitPrice) {
-        this.unitPrice = unitPrice;
-    }
 }
